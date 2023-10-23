@@ -103,20 +103,20 @@ export class MainPrivate extends Component {
 
   render() {
     const { children } = this.props
-    const { visible, sidebar, visibleNotification } = this.state
-    const { pathname } = window.location
+    // const { visible, sidebar, visibleNotification } = this.state
+    // const { pathname } = window.location
 
-    const initialProps = {
-      visible: visible,
-      sidebar: sidebar,
-      visibleNotification: visibleNotification,
-      showDrawer: this.showDrawer,
-      onClose: this.onClose,
-      onClickSider: this.onClickSider,
-      showNotification: this.showNotification,
-      onCloseNotification: this.onCloseNotification,
-      setLogout: this.setLogout
-    }
+    // const initialProps = {
+    //   visible: visible,
+    //   sidebar: sidebar,
+    //   visibleNotification: visibleNotification,
+    //   showDrawer: this.showDrawer,
+    //   onClose: this.onClose,
+    //   onClickSider: this.onClickSider,
+    //   showNotification: this.showNotification,
+    //   onCloseNotification: this.onCloseNotification,
+    //   setLogout: this.setLogout
+    // }
 
     return (
       <Layout style={{ position: 'relative', minHeight: '100vh' }}>

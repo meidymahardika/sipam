@@ -43,8 +43,9 @@ export class AppRoute extends Component {
     
     return (
       <Router>
-        <Switch>
+        <Switch />
           <PublicRoute exact path='/' component={Containers.Menu} passProps={this.props} private={false} />
+          <PublicRoute path='/q' component={Containers.Menu} passProps={this.props} private={false} />
           <PrivateRoute exact path='/admin' component={Containers.Menu} passProps={this.props} private={true} />
           { 
             isDisconnected && (
@@ -53,7 +54,7 @@ export class AppRoute extends Component {
               </React.Fragment>
             )
           } 
-        </Switch>
+        {/* </Switch> */}
       </Router>
     )
   }
