@@ -161,4 +161,5 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Menu)
+// export default connect(mapStateToProps, mapDispatchToProps)(Menu)
+export default Menu
