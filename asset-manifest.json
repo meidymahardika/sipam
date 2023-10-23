@@ -1,15 +1,16 @@
 {
   "files": {
-    "main.css": "/sipam/static/css/main.f95352e6.css",
-    "main.js": "/sipam/static/js/main.d01085be.js",
+    "main.css": "/sipam/static/css/main.d9243c29.css",
+    "main.js": "/sipam/static/js/main.ba2816ba.js",
     "static/js/787.598aa1cb.chunk.js": "/sipam/static/js/787.598aa1cb.chunk.js",
+    "static/media/logo.png": "/sipam/static/media/logo.16c5a623f52f53e3e9bf.png",
     "index.html": "/sipam/index.html",
-    "main.f95352e6.css.map": "/sipam/static/css/main.f95352e6.css.map",
-    "main.d01085be.js.map": "/sipam/static/js/main.d01085be.js.map",
+    "main.d9243c29.css.map": "/sipam/static/css/main.d9243c29.css.map",
+    "main.ba2816ba.js.map": "/sipam/static/js/main.ba2816ba.js.map",
     "787.598aa1cb.chunk.js.map": "/sipam/static/js/787.598aa1cb.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.f95352e6.css",
-    "static/js/main.d01085be.js"
+    "static/css/main.d9243c29.css",
+    "static/js/main.ba2816ba.js"
   ]
 }
