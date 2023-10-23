@@ -42,20 +42,22 @@ export class AppRoute extends Component {
     const { isDisconnected } = this.state;
     
     return (
-      <Router>
-        <Switch />
-          <PublicRoute exact path='/' component={Containers.Menu} passProps={this.props} private={false} />
-          <PublicRoute path='/q' component={Containers.Menu} passProps={this.props} private={false} />
-          <PrivateRoute exact path='/admin' component={Containers.Menu} passProps={this.props} private={true} />
-          { 
-            isDisconnected && (
-              <React.Fragment>
-                <Result status="500" title="Lost Connection" subTitle="Please check your internet connection" />
-              </React.Fragment>
-            )
-          } 
-        {/* </Switch> */}
-      </Router>
+      <div className="container">
+        <Router>
+          <Switch>
+            <PublicRoute exact path='/' component={Containers.Menu} passProps={this.props} private={false} />
+            <PublicRoute path='/q' component={Containers.Menu} passProps={this.props} private={false} />
+            <PrivateRoute exact path='/admin' component={Containers.Menu} passProps={this.props} private={true} />
+            { 
+              isDisconnected && (
+                <React.Fragment>
+                  <Result status="500" title="Lost Connection" subTitle="Please check your internet connection" />
+                </React.Fragment>
+              )
+            } 
+          </Switch>
+        </Router>
+      </div>
     )
   }
 }
