@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import * as Containers from '../containers';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { PrivateRoute, PublicRoute } from './route'
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { HashRouter as Router, Switch } from "react-router-dom";
+import { checkAuth } from '../redux/actions/auth/authAction';
+import { Loading } from '../components';
 
 export class AppRoute extends Component {
   constructor(props) {
@@ -11,22 +13,36 @@ export class AppRoute extends Component {
     }
   }
 
-
+  componentDidMount() {
+    const { actionCheckAuth } = this.props;
+    actionCheckAuth()
+  }
+  
   render() {
+    const { loading } = this.props;
+
+    if(loading){ 
+      return <Loading />
+    }
+
     return (
       <Router>
         <Switch>
           <PublicRoute exact path='/' component={Containers.Menu} passProps={this.props} private={false} />
-          <PublicRoute path='/q' component={Containers.Menu} passProps={this.props} private={false} />
-          <PrivateRoute path='/admin' component={Containers.Menu} passProps={this.props} private={true} />
+          <PublicRoute exact path='/test' component={Containers.Test} passProps={this.props} private={false} />
+          <PublicRoute exact path='/admin' component={Containers.Login} passProps={this.props} private={false} />
+          <PrivateRoute exact path='/admin/transaction' component={Containers.Transaction} passProps={this.props} private={true} />
+          <PrivateRoute exact path='/admin/product' component={Containers.Product} passProps={this.props} private={true} />
         </Switch>
       </Router>
     )
   }
 }
-// const mapStateToProps = (state) => ({
-// })
-// const mapDispatchToProps = {
-// }
-// export default connect(mapStateToProps, mapDispatchToProps)(AppRoute)
-export default AppRoute
+const mapStateToProps = (state) => ({
+  loading     : state.authReducer.loading,
+  authed      : state.authReducer.authed,
+})
+const mapDispatchToProps = {
+  actionCheckAuth: checkAuth
+}
+export default connect(mapStateToProps, mapDispatchToProps)(AppRoute)

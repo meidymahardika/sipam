@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 // import Cookie from 'js-cookie';
 import { Layout } from 'antd';
-// import Header from './Header';
-// import Sider from './Sider';
+import Header from './Header';
+import Sider from './Sider';
 // import Footer from './Footer';
 
 const { Content } = Layout;
@@ -61,45 +61,45 @@ export class MainPrivate extends Component {
     // })
   }
 
-  showDrawer = () => {
-    this.setState({
-      visible: true
-    })
-  }
+  // showDrawer = () => {
+  //   this.setState({
+  //     visible: true
+  //   })
+  // }
 
-  onClose = () => {
-    this.setState({
-      visible: false
-    })
-  }
+  // onClose = () => {
+  //   this.setState({
+  //     visible: false
+  //   })
+  // }
 
-  onClickSider = () => {
-    const { sidebar } = this.state
-    this.setState({
-      sidebar: sidebar === true ? false : true
-    })
-  }
+  // onClickSider = () => {
+  //   const { sidebar } = this.state
+  //   this.setState({
+  //     sidebar: sidebar === true ? false : true
+  //   })
+  // }
 
-  showNotification = () => {
-    this.setState({
-      visibleNotification: true
-    })
-  }
+  // showNotification = () => {
+  //   this.setState({
+  //     visibleNotification: true
+  //   })
+  // }
 
-  onCloseNotification = () => {
-    this.setState({
-      visibleNotification: false
-    })
-  }
+  // onCloseNotification = () => {
+  //   this.setState({
+  //     visibleNotification: false
+  //   })
+  // }
 
-  setLogout = () => {
-    const { actionSetLogout } = this.props;
+  // setLogout = () => {
+  //   const { actionSetLogout } = this.props;
     
-    return new Promise((resolve, reject) => {
-      actionSetLogout(() => { resolve() }, () => reject())
-    });
+  //   return new Promise((resolve, reject) => {
+  //     actionSetLogout(() => { resolve() }, () => reject())
+  //   });
 
-  }
+  // }
 
   render() {
     const { children } = this.props
@@ -119,30 +119,24 @@ export class MainPrivate extends Component {
     // }
 
     return (
-      <Layout style={{ position: 'relative', minHeight: '100vh' }}>
-        {/* <Header {...initialProps} {...this.props} style={{ borderBottom: '2px solid #dfdfdf' }} /> */}
+      <Layout className='layout'>
+        <Header />
         <Layout>
-          {/* {
-            pathname === '/job-preferences/industries' || pathname === '/job-preferences/position' || pathname === '/job-preferences/destination' ?
-              null
-            :
-              <Sider {...initialProps} {...this.props} />
-          } */}
+          <Sider {...this.props} />
           <Content>
             { children }
           </Content>
         </Layout>
-        {/* <Footer style={{ position: 'absolute', bottom: 0, width: '100%', height: '2.5rem' }} /> */}
+        {/* <Footer /> */}
       </Layout>
     )
   }
 }
 
-// const mapStateToProps = (state) => ({
-// })
+const mapStateToProps = (state) => ({
+})
 
-// const mapDispatchToProps = {
-// }
+const mapDispatchToProps = {
+}
 
-// export default connect(mapStateToProps, mapDispatchToProps)(MainPrivate)
-export default MainPrivate
+export default connect(mapStateToProps, mapDispatchToProps)(MainPrivate)

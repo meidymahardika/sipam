@@ -31,11 +31,10 @@ export class MainPublic extends Component {
     )
   }
 }
-// const mapStateToProps = (state) => ({
-// })
+const mapStateToProps = (state) => ({
+})
 
-// const mapDispatchToProps = {
-// }
+const mapDispatchToProps = {
+}
 
-// export default connect(mapStateToProps, mapDispatchToProps)(MainPublic)
-export default MainPublic
+export default connect(mapStateToProps, mapDispatchToProps)(MainPublic)

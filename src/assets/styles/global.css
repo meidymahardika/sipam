@@ -8,19 +8,29 @@ body {
   min-height: 100vh;
 }
 
-.header {
+.header-public {
   background: #fff;
   box-shadow: 1px 4px 8px #e6e6e6;
 }
 
-.main-public-content {
+.header-private {
+  background-color: #fff;
+  /* box-shadow: 1px 4px 8px #e6e6e6; */
+  border-bottom: 2px solid #dfdfdf;
+}
+
+.main-content {
   margin: 16px;
 }
 
-.card-menu {
+.rounded {
   border-radius: 8px;
 }
 
 .full-width {
   width: 100% !important;
+}
+
+.site-page-header {
+  padding: 0;
 }

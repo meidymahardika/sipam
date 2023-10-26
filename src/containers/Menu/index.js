@@ -7,9 +7,9 @@ const { Text } = Typography
 export class Menu extends Component {
   render() {
     return (
-      <Row className='main-public-content'>
+      <Row className='main-content'>
         <Col span={24} style={{ marginBottom: 8 }}>
-          <Card className='card-menu' bodyStyle={{ padding: 8 }}>
+          <Card className='rounded' bodyStyle={{ padding: 8 }}>
             <Space size={16}>
               <Image
                 width={75}
@@ -27,7 +27,7 @@ export class Menu extends Component {
           </Card>
         </Col>
         <Col span={24} style={{ marginBottom: 8 }}>
-          <Card className='card-menu' bodyStyle={{ padding: 8 }}>
+          <Card className='rounded' bodyStyle={{ padding: 8 }}>
             <Space size={16}>
               <Image
                 width={75}
@@ -45,7 +45,7 @@ export class Menu extends Component {
           </Card>
         </Col>
         <Col span={24} style={{ marginBottom: 8 }}>
-          <Card className='card-menu' bodyStyle={{ padding: 8 }}>
+          <Card className='rounded' bodyStyle={{ padding: 8 }}>
             <Space size={16}>
               <Image
                 width={75}
@@ -63,7 +63,7 @@ export class Menu extends Component {
           </Card>
         </Col>
         <Col span={24} style={{ marginBottom: 8 }}>
-          <Card className='card-menu' bodyStyle={{ padding: 8 }}>
+          <Card className='rounded' bodyStyle={{ padding: 8 }}>
             <Space size={16}>
               <Image
                 width={75}
@@ -81,7 +81,7 @@ export class Menu extends Component {
           </Card>
         </Col>
         <Col span={24} style={{ marginBottom: 8 }}>
-          <Card className='card-menu' bodyStyle={{ padding: 8 }}>
+          <Card className='rounded' bodyStyle={{ padding: 8 }}>
             <Space size={16}>
               <Image
                 width={75}
@@ -99,7 +99,7 @@ export class Menu extends Component {
           </Card>
         </Col>
         <Col span={24} style={{ marginBottom: 8 }}>
-          <Card className='card-menu' bodyStyle={{ padding: 8 }}>
+          <Card className='rounded' bodyStyle={{ padding: 8 }}>
             <Space size={16}>
               <Image
                 width={75}
@@ -117,7 +117,7 @@ export class Menu extends Component {
           </Card>
         </Col>
         <Col span={24} style={{ marginBottom: 8 }}>
-          <Card className='card-menu' bodyStyle={{ padding: 8 }}>
+          <Card className='rounded' bodyStyle={{ padding: 8 }}>
             <Space size={16}>
               <Image
                 width={75}
@@ -135,7 +135,7 @@ export class Menu extends Component {
           </Card>
         </Col>
         <Col span={24} style={{ marginBottom: 8 }}>
-          <Card className='card-menu' bodyStyle={{ padding: 8 }}>
+          <Card className='rounded' bodyStyle={{ padding: 8 }}>
             <Space size={16}>
               <Image
                 width={75}
@@ -161,5 +161,4 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Menu)
-export default Menu
+export default connect(mapStateToProps, mapDispatchToProps)(Menu)

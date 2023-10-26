@@ -5,7 +5,7 @@ const { Header } = Layout
 
 export default function PublicHeader() {
   return (
-    <Header className='header'>
+    <Header className='header-public'>
       <Image
         width={150}
         src={Logo}
