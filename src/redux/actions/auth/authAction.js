@@ -35,3 +35,17 @@ export const setLogin = (value, successCB, failedCB) => async dispatch => {
       return failedCB && failedCB(errorCode)
     });
 }
+
+export const setLogout = (successCB, failedCB) => async dispatch => {
+  return dispatch(removedata(() => {
+    dispatch({ type: 'SET_LOGOUT_SUCCESS'})
+    return successCB && successCB();
+  }))
+}
+
+export const removedata = (cb) => async (dispatch) => {
+  await Cookies.remove('uid')
+  await Cookies.remove('accessToken')
+  await Cookies.remove('refreshToken')
+  return cb()
+}

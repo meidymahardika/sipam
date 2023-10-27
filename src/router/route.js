@@ -3,7 +3,6 @@ import { MainPublic, MainPrivate } from '../components'
 import { Route, Redirect } from 'react-router-dom'
 
 export const PrivateRoute = ({ component: Component, passProps, ...res }) => {
-  console.log(11, passProps);
   return (
     <React.Fragment>
       <Route 
@@ -12,14 +11,13 @@ export const PrivateRoute = ({ component: Component, passProps, ...res }) => {
           (props) => 
           passProps.authed ? <MainPrivate {...res} {...props}> <Component {...res} {...props} /> </MainPrivate> 
           : 
-          <Redirect to="/" /> 
+          <Redirect to="/admin" /> 
         } 
       />
     </React.Fragment>
   )
 }
 export const PublicRoute = ({ component: Component, passProps, ...res }) => {
-  console.log(12, passProps);
   return (
     <Route 
       {...res}

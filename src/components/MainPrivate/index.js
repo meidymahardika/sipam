@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import Cookie from 'js-cookie';
-import { Layout } from 'antd';
+import { Layout, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 import Header from './Header';
 import Sider from './Sider';
 // import Footer from './Footer';
+import { setLogout } from '../../redux/actions/auth/authAction';
 
 const { Content } = Layout;
+const { confirm } = Modal;
 
 export class MainPrivate extends Component {
   constructor(props) {
@@ -92,21 +95,29 @@ export class MainPrivate extends Component {
   //   })
   // }
 
-  // setLogout = () => {
-  //   const { actionSetLogout } = this.props;
+  setLogout = () => {
+    const { actionSetLogout } = this.props;
     
-  //   return new Promise((resolve, reject) => {
-  //     actionSetLogout(() => { resolve() }, () => reject())
-  //   });
+    confirm({
+      title: 'Are you sure want to logout?',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        return new Promise((resolve, reject) => {
+          actionSetLogout(() => { resolve() }, () => reject())
+        });
+      },
+      onCancel() {},
+    });
 
-  // }
+
+  }
 
   render() {
     const { children } = this.props
     // const { visible, sidebar, visibleNotification } = this.state
     // const { pathname } = window.location
 
-    // const initialProps = {
+    const initialProps = {
     //   visible: visible,
     //   sidebar: sidebar,
     //   visibleNotification: visibleNotification,
@@ -115,12 +126,12 @@ export class MainPrivate extends Component {
     //   onClickSider: this.onClickSider,
     //   showNotification: this.showNotification,
     //   onCloseNotification: this.onCloseNotification,
-    //   setLogout: this.setLogout
-    // }
+      setLogout: this.setLogout
+    }
 
     return (
       <Layout className='layout'>
-        <Header />
+        <Header {...this.props} {...initialProps} />
         <Layout>
           <Sider {...this.props} />
           <Content>
@@ -137,6 +148,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
+  actionSetLogout: setLogout,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainPrivate)
