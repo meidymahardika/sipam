@@ -33,6 +33,7 @@ export class AppRoute extends Component {
           <PublicRoute exact path='/admin' component={Containers.Login} passProps={this.props} private={false} />
           <PrivateRoute exact path='/admin/transaction' component={Containers.Transaction} passProps={this.props} private={true} />
           <PrivateRoute exact path='/admin/product' component={Containers.Product} passProps={this.props} private={true} />
+          <PrivateRoute exact path='/admin/report' component={Containers.Report} passProps={this.props} private={true} />
         </Switch>
       </Router>
     )

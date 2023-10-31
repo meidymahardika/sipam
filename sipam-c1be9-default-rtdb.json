@@ -5,7 +5,10 @@
       "isActive": true,
       "name": "N Goreng",
       "price": 15000,
-
+      "createdDate": "2023/05/30",
+      "updatedDate": "2023/05/30",
+      "img": "http://test.com",
+      "desc": "lorem ipsum"
     },
     {
       "id": 2,
@@ -60,6 +63,33 @@
       "isActive": true,
       "name": "C Goreng",
       "price": 15000
+    }
+  ],
+  "order": [
+    {
+      "id": 1,
+      "orderNumber": "TRK-23120100001",
+      "queue": 1,
+      "name": "Meidy",
+      "email": "meidy@yopmail.com",
+      "phone": "08123456789",
+      "detailOrder": [
+        {
+          "id": 1,
+          "id_order": 1,
+          "id_product": 10,
+          "qty": 2
+        },
+        {
+          "id": 2,
+          "id_product": 9,
+          "qty": 1
+        }
+      ],
+      "total": 45000,
+      "status": "ORDER",
+      "createdDate": "2023/05/30",
+      "updatedDate": "2023/05/30"
     }
   ]
 }
