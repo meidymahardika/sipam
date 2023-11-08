@@ -3,25 +3,31 @@ import { Space, Tag } from 'antd'
 export const columns = (props) => {
   return [
     {
+      title: 'No',
+      dataIndex: 'no',
+      key: 'no',
+      render: (_,val,i) => i+1,
+    },
+    {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
       render: (text) => text,
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
+      title: 'Status',
+      key: 'status',
+      dataIndex: 'status',
       render: (_, { tags }) => (
         <>
           {tags.map((tag) => {

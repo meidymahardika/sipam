@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Card, Button, Breadcrumb, PageHeader, Table, Modal, Form, Input, InputNumber, Space } from 'antd'
-import { ShoppingOutlined, PlusOutlined } from '@ant-design/icons'
+import { Row, Col, Card, Button, Breadcrumb, PageHeader, Table, Modal, Form, Input, InputNumber, Space, Upload, message } from 'antd'
+import { ShoppingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { columns } from './columns'
 
 const data = [
@@ -52,9 +52,27 @@ export class Product extends Component {
       visible: false
     })
   };
-
+  
   render() {
     const { visible, submitLoading } = this.state
+
+    const props = {
+      name: 'file',
+      action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+      headers: {
+        authorization: 'authorization-text',
+      },
+      onChange(info) {
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+          message.error(`${info.file.name} file upload failed.`);
+        }
+      },
+    };
 
     return (
       <React.Fragment>
@@ -114,6 +132,17 @@ export class Product extends Component {
                   formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   parser={(value) => value.replace(/,/g, '')}
                   />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item name="image" label="Image">
+                <Upload 
+                  {...props}
+                  listType='picture'
+                  maxCount={1}
+                >
+                  <Button icon={<UploadOutlined />}>Upload Image</Button>
+                </Upload>
                 </Form.Item>
               </Col>
               <Col span={24}>
