@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/sipam/static/css/main.70009996.css",
-    "main.js": "/sipam/static/js/main.431d84d6.js",
+    "main.js": "/sipam/static/js/main.3fdfc271.js",
     "static/js/787.598aa1cb.chunk.js": "/sipam/static/js/787.598aa1cb.chunk.js",
     "static/media/logo.png": "/sipam/static/media/logo.16c5a623f52f53e3e9bf.png",
     "index.html": "/sipam/index.html",
     "main.70009996.css.map": "/sipam/static/css/main.70009996.css.map",
-    "main.431d84d6.js.map": "/sipam/static/js/main.431d84d6.js.map",
+    "main.3fdfc271.js.map": "/sipam/static/js/main.3fdfc271.js.map",
     "787.598aa1cb.chunk.js.map": "/sipam/static/js/787.598aa1cb.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.70009996.css",
-    "static/js/main.431d84d6.js"
+    "static/js/main.3fdfc271.js"
   ]
 }
