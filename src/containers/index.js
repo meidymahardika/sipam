@@ -1,15 +1,17 @@
 import Menu from './Menu';
 import Login from './Login';
 import Test from './Test';
-import Transaction from './Admin/Transaction';
+import Order from './Admin/Order';
 import Product from './Admin/Product';
+import CategoryProduct from './Admin/CategoryProduct';
 import Report from './Admin/Report';
 
 export {
   Menu, 
   Login,
   Test,
-  Transaction,
+  Order,
   Product,
+  CategoryProduct,
   Report
 }

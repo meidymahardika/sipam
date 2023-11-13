@@ -1,19 +1,24 @@
 import React from 'react'
 import { Layout, Menu } from 'antd'
-import { DollarOutlined, ShoppingOutlined, FileTextOutlined } from '@ant-design/icons';
+import { DollarOutlined, ShoppingOutlined, FileTextOutlined, GroupOutlined } from '@ant-design/icons';
 
 const { Sider } = Layout
 
 const items = [
   {
-    key: '/admin/transaction',
-    label: 'Transaction',
+    key: '/admin/order',
+    label: 'Order',
     icon: <DollarOutlined />,
   },
   {
     key: '/admin/product',
     label: 'Product',
     icon: <ShoppingOutlined />,
+  },
+  {
+    key: '/admin/category-product',
+    label: 'Category Product',
+    icon: <GroupOutlined />,
   },
   {
     key: '/admin/report',

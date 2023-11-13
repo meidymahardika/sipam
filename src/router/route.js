@@ -26,7 +26,7 @@ export const PublicRoute = ({ component: Component, passProps, ...res }) => {
         !passProps.authed ? 
           <MainPublic {...res} {...props}> <Component {...res} {...props} /> </MainPublic>
         : 
-          <Redirect to="/admin/transaction"/>
+          <Redirect to="/admin/order"/>
        }
     />
   )

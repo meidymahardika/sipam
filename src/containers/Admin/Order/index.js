@@ -28,7 +28,7 @@ const data = [
   },
 ];
 
-export class Transaction extends Component {
+export class Order extends Component {
   render() {
     return (
       <Row className='main-content'>
@@ -37,14 +37,14 @@ export class Transaction extends Component {
             <Row gutter={[0, 16]}>
               <Col span={24}>
                 <Breadcrumb>
-                  <Breadcrumb.Item><DollarOutlined /> Transaction</Breadcrumb.Item>
-                  <Breadcrumb.Item>Transaction List</Breadcrumb.Item>
+                  <Breadcrumb.Item><DollarOutlined /> Order</Breadcrumb.Item>
+                  <Breadcrumb.Item>Order List</Breadcrumb.Item>
                 </Breadcrumb>
               </Col>
               <Col span={24}>
                 <PageHeader 
                   className="site-page-header" 
-                  title='Transaction List'
+                  title='Order List'
                 />
               </Col>
               <Col span={24}>
@@ -62,4 +62,4 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Transaction)
+export default connect(mapStateToProps, mapDispatchToProps)(Order)
