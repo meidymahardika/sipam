@@ -4,7 +4,7 @@ import {
   DeleteOutlined
 } from '@ant-design/icons';
 
-export const columns = (props) => {
+export const columns = (handleEdit, handleDelete) => {
   return [
     {
       title: 'No',
@@ -16,9 +16,8 @@ export const columns = (props) => {
     },
     {
       title: 'Name',
-      dataIndex: 'name',
       key: 'name',
-      render: (text) => text,
+      render: (record) => record.name,
     },
     {
       title: 'Action',
@@ -27,10 +26,10 @@ export const columns = (props) => {
       align: 'center',
       render: (_, record) => (
         <Space>
-          <Button type="primary" icon={<EditOutlined />}>
+          <Button type="primary" onClick={() => handleEdit(record.id, record.name)} icon={<EditOutlined />}>
             Edit
           </Button>
-          <Button type="danger" icon={<DeleteOutlined />}>
+          <Button type="danger" onClick={() => handleDelete(record.id)} icon={<DeleteOutlined />}>
             Delete
           </Button>
         </Space>

@@ -1,19 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Card, Button, Breadcrumb, PageHeader, Table, Modal, Form, Input, Space } from 'antd'
-import { GroupOutlined, PlusOutlined } from '@ant-design/icons'
+import { Loading } from '../../../components'
+import { Row, Col, Card, Button, Breadcrumb, PageHeader, Table, Modal, Form, Input, Space, message } from 'antd'
+import { GroupOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { columns } from './columns'
+import { listCategoryProduct, createCategoryProduct, deleteCategoryProduct, updateCategoryProduct, unmountListCategoryProduct } from '../../../redux/actions/categoryProduct/categoryProductAction'
 
-const data = [
-  {
-    key: '1',
-    name: 'Food',
-  },
-  {
-    key: '2',
-    name: 'Drink',
-  },
-];
+const { confirm } = Modal
 
 export class CategoryProduct extends Component {
   formRef = React.createRef();
@@ -24,10 +17,23 @@ export class CategoryProduct extends Component {
        visible: false,
        submitLoading: false,
        deleteLoading: false,
-       valueForm: null
+       valueForm: null,
+       meta: {
+        page: 1,
+        perpage: 10
+       },
+       isEdit: true,
+       dataEdit: null
     }
   }
   
+  componentDidMount() {
+    const { meta } = this.state
+    const { actionGetCategoryProduct } = this.props
+
+    return actionGetCategoryProduct(meta)
+  }
+
   showModal = () => {
     this.setState({
       visible: true,
@@ -40,8 +46,65 @@ export class CategoryProduct extends Component {
     })
   };
   
+  onAdd = (values) => {
+    const { meta } = this.state
+    const { actionCreate, actionGetCategoryProduct } = this.props;
+    this.setState({ submitLoading: true })
+
+    return actionCreate(values, () => {
+      this.setState({ submitLoading: false }, () => {
+        message.success('Data created successfully')
+        this.setState({ visible: false })
+        return actionGetCategoryProduct(meta)
+      })
+    }, (err) => {
+      this.setState({ submitLoading: false }, () => message.error(err))
+    })
+  }
+
+  onUpdate = (values) => {
+    const { meta, dataEdit, isEdit } = this.state
+    const { actionUpdate, actionGetCategoryProduct } = this.props;
+    this.setState({ submitLoading: true })
+    const id = dataEdit?.id
+    return actionUpdate(id, values, () => {
+      this.setState({ submitLoading: false }, () => {
+        message.success(`Data ${isEdit ? 'updated' : 'created'} successfully`)
+        this.setState({ visible: false })
+        return actionGetCategoryProduct(meta)
+      })
+    }, (err) => {
+      this.setState({ submitLoading: false }, () => message.error(err))
+    })
+  }
+
+  handleEdit = (id, name) => {
+    this.setState({ visible: true, isEdit: true, dataEdit: {id, name} })
+  }
+
+  handleDelete = (value) => {
+    const { meta } = this.state;
+    const { actionDelete, actionGetCategoryProduct } = this.props;
+    confirm({
+      title: 'Do you Want to delete these items?',
+      icon: <ExclamationCircleOutlined />,
+      onOk() {
+        return actionDelete(value, () => {
+          message.success('Successfully deleted data')
+          return actionGetCategoryProduct(meta)
+        }, (err) => message.error(err))
+      },
+      onCancel() {},
+    });
+  }
+
   render() {
-    const { visible, submitLoading } = this.state
+    const { visible, submitLoading, isEdit, dataEdit } = this.state
+    const { getData: { data, loading } } = this.props
+
+    if(loading){
+      return <Loading />
+    }
 
     return (
       <React.Fragment>
@@ -68,14 +131,17 @@ export class CategoryProduct extends Component {
                   />
                 </Col>
                 <Col span={24}>
-                  <Table columns={columns()} dataSource={data} />
+                  <Table 
+                    dataSource={data} 
+                    columns={columns(this.handleEdit, this.handleDelete)} 
+                  />
                 </Col>
               </Row>
             </Card>
           </Col>
         </Row>
         <Modal 
-          title='Add Category Product'
+          title={isEdit ? 'Edit Category Product' : 'Add Category Product'}
           visible={visible} 
           onCancel={this.handleCancel} 
           footer={false}
@@ -85,18 +151,26 @@ export class CategoryProduct extends Component {
           <Form 
             ref={this.formRef}
             layout="vertical"
-            onFinish={this.onFinish}
+            onFinish={isEdit ? this.onUpdate : this.onAdd}
           >
             <Row>
               <Col span={24}>
-                <Form.Item name="Name" label="Name" style={{ marginBottom: 8 }}>
+                <Form.Item 
+                  name="name" 
+                  label="Name" 
+                  initialValue={dataEdit?.name ? dataEdit?.name : null} 
+                  style={{ marginBottom: 8 }}
+                  rules={[
+                    { required: true }
+                  ]}
+                >
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Space style={{ float: 'right' }}>
                   <Button onClick={this.handleCancel}>Cancel</Button>
-                  <Button htmlType="submit" type="primary" loading={submitLoading}>Add</Button>
+                  <Button htmlType="submit" type="primary" loading={submitLoading}>{isEdit ? 'Update' : 'Add'}</Button>
                 </Space>
               </Col>
             </Row>
@@ -105,10 +179,22 @@ export class CategoryProduct extends Component {
       </React.Fragment>
     )
   }
+  componentWillUnmount() {
+    const { unmountListCategoryProduct } = this.props
+    return unmountListCategoryProduct()
+  }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+  getData: state.categoryProduct.list
+})
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  actionGetCategoryProduct: listCategoryProduct,
+  actionCreate: createCategoryProduct,
+  actionDelete: deleteCategoryProduct,
+  actionUpdate: updateCategoryProduct,
+  unmountListCategoryProduct: unmountListCategoryProduct
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(CategoryProduct)

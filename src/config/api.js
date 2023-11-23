@@ -24,6 +24,30 @@ export const GET = (path, payload) => {
   })
 }
 
+export const DELETE = (path, payload) => {
+  const header = {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
+    'X-Requested-With':' XMLHttpRequest'
+  }
+  return new Promise((resolve ,reject) => {
+    axios.delete(`${env}${path}`, {
+      headers: header,
+      params: payload
+    }).then((response) => {
+      let data = response.data;
+      if(response.status === 200){
+        return resolve(data);
+      }else{
+        const error = { message: 'error' }
+        return reject(error)
+      }
+    }).catch((err) => {
+      return reject(err.response.data.message)
+    })
+  })
+}
+
 export const POST = (path, payload) => {
   const header = {
     'X-Requested-With': 'XMLHttpRequest',
@@ -33,6 +57,27 @@ export const POST = (path, payload) => {
   return new Promise((resolve ,reject) => {
     axios.post(`${env}${path}`,payload, {
       headers: header
+    }).then((response) => {
+      if(response.status === 200){
+        return resolve(response.data);
+      }else{
+        return reject();
+      }
+    }).catch((err) => {
+      return reject(err.response.data.message);
+    })
+  })
+}
+
+export const PUT = (path, payload) => {
+  const header = {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache',
+  }
+  return new Promise((resolve ,reject) => {
+    axios.put(`${env}${path}`,payload, {
+      headers: header,
     }).then((response) => {
       if(response.status === 200){
         return resolve(response.data);

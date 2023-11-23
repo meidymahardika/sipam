@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Row, Col, Space, Card, Typography, Image, Button, Layout, Badge, Drawer } from 'antd'
+import { Row, Col, Space, Card, Typography, Image, Button, Layout, Badge, Drawer, Divider } from 'antd'
 import { PlusOutlined, ShoppingOutlined, MinusOutlined } from '@ant-design/icons'
 import { indexProduct, unmountIndexProduct } from '../../redux/actions/product/productAction'
 import { Loading } from '../../components'
@@ -79,33 +79,47 @@ export class Menu extends Component {
         <Row className='main-content' style={data.length > 0 ? { marginBottom: 64 } : null}>
           {
             getProduct.data.map((item,i) => 
-              <Col key={i} span={24} style={{ marginBottom: 8 }}>
-                <Card className='rounded' bodyStyle={{ padding: 8 }}>
-                  <Space size={16}>
-                    <Image
-                      width={75}
-                      height={75}
-                      src='https://firebasestorage.googleapis.com/v0/b/sipam-c1be9.appspot.com/o/files%2F1699446864683?alt=media&token=f41644ab-e1f3-4d8c-81bb-a56c752808d2'
-                      preview={false}
-                    />
-                    <Space direction='vertical' size={0}>
-                      <Text>{item.name}</Text>
-                      <Text strong>Rp {item.price.toLocaleString()}</Text>
-                    </Space>
-                  </Space>
-                  <Space style={{ float: 'right', marginTop: 24 }}>
-                    {
-                      data.find(res => res.id === item.id) ?
-                        <>
-                          <Button type="primary" size='small' onClick={() => this.handleMinCart(item)} icon={<MinusOutlined />} ghost />
-                          <Text>{data.find(res => res.id === item.id)?.qty}</Text>
-                        </>
-                      : null
-                    }
-                    <Button type="primary" size='small' onClick={() => this.handleAddCart(item)} icon={<PlusOutlined />} />
-                  </Space>
-                </Card>
-              </Col>
+              <React.Fragment key={i}>
+                <Col span={24} style={{ marginBottom: 8 }}>
+                  <Text strong>{item.category}</Text>
+                </Col>
+                {
+                  item.data.map((res,idxProd) => 
+                    <Col key={idxProd} span={24} style={{ marginBottom: 8 }}>
+                      <Card className='rounded' bodyStyle={{ padding: 8 }}>
+                        <Space size={16}>
+                          <Image
+                            width={75}
+                            height={75}
+                            src='https://firebasestorage.googleapis.com/v0/b/sipam-c1be9.appspot.com/o/files%2F1699446864683?alt=media&token=f41644ab-e1f3-4d8c-81bb-a56c752808d2'
+                            preview={false}
+                          />
+                          <Space direction='vertical' size={0}>
+                            <Text>{res.name}</Text>
+                            <Text strong>Rp {res.price.toLocaleString()}</Text>
+                          </Space>
+                        </Space>
+                        <Space style={{ float: 'right', marginTop: 24 }}>
+                          {
+                            data.find(r => r.id === res.id) ?
+                              <>
+                                <Button type="primary" size='small' onClick={() => this.handleMinCart(res)} icon={<MinusOutlined />} ghost />
+                                <Text>{data.find(r => r.id === res.id)?.qty}</Text>
+                              </>
+                            : null
+                          }
+                          <Button type="primary" size='small' onClick={() => this.handleAddCart(res)} icon={<PlusOutlined />} />
+                        </Space>
+                      </Card>
+                    </Col>
+                  )
+                }
+                {
+                  getProduct.data.length !== i+1 ?
+                    <Divider style={{ marginTop: 8, marginBottom: 16 }} />
+                  : null
+                }
+              </React.Fragment>
             )
           }
         </Row>
