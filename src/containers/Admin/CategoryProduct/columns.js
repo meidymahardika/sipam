@@ -20,10 +20,9 @@ export const columns = (handleEdit, handleDelete) => {
       render: (record) => record.name,
     },
     {
-      title: 'Action',
       key: 'action',
       width: 40,
-      align: 'center',
+      align: 'right',
       render: (_, record) => (
         <Space>
           <Button type="primary" onClick={() => handleEdit(record.id, record.name)} icon={<EditOutlined />}>

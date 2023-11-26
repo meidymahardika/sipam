@@ -1,4 +1,10 @@
-import { Space, Tag } from 'antd'
+import { Space, Tag, Button } from 'antd'
+import {
+  EditOutlined,
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  SearchOutlined
+} from '@ant-design/icons';
 
 export const columns = (props) => {
   return [
@@ -9,48 +15,55 @@ export const columns = (props) => {
       render: (_,val,i) => i+1,
     },
     {
+      title: 'Category Product',
+      key: 'categoryProduct',
+      render: (record) => record.category_name,
+    },
+    {
       title: 'Name',
-      dataIndex: 'name',
       key: 'name',
-      render: (text) => text,
+      render: (record) => record.name,
     },
     {
       title: 'Price',
-      dataIndex: 'price',
       key: 'price',
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
+      render: (record) => `Rp ${record?.price?.toLocaleString()}`,
+
     },
     {
       title: 'Status',
       key: 'status',
-      dataIndex: 'status',
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
+      width: 50,
+      render: (record) => (
+        record.is_active === 1 ?
+          <Tag color="success">Ready</Tag>
+        :
+          <Tag color="error">Not Ready</Tag>
       ),
     },
     {
-      title: 'Action',
       key: 'action',
+      width: 40,
+      align: 'right',
       render: (_, record) => (
-        <Space size="middle">
-          {/* <a>Invite {record.name}</a>
-          <a>Delete</a> */}
+        <Space>
+          <Button type="primary" icon={<EditOutlined />}>
+            Edit
+          </Button>
+          {
+            record.is_active === 1 ?
+              <Button type="danger" icon={<CloseCircleOutlined />} ghost style={{ width: 150 }}>
+                Set Not Ready
+              </Button>
+            :
+              <Button type="primary" icon={<CheckCircleOutlined />} ghost style={{ width: 150 }}>
+                Set Ready
+              </Button>
+          }
+          <Button icon={<SearchOutlined />}>Detail</Button>
+          {/* <Button type="danger" icon={<DeleteOutlined />}>
+            Delete
+          </Button> */}
         </Space>
       ),
     },

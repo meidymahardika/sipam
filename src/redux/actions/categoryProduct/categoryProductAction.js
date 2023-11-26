@@ -5,10 +5,6 @@ export const unmountListCategoryProduct = () => (dispatch) => {
   return dispatch({type: 'UNMOUNT_DATA_CATEGORY_PRODUCT'})
 }
 
-export const unmountDetailCategoryProduct = () => (dispatch) => {
-  return dispatch({type: 'UNMOUNT_DETAIL_CATEGORY_PRODUCT'})
-}
-
 export const unmountMasterCategoryProduct = () => (dispatch) => {
   return dispatch({type: 'UNMOUNT_DATA_MASTER_CATEGORY_PRODUCT'})
 }
@@ -30,6 +26,23 @@ export const listCategoryProduct = (meta) => async (dispatch) => {
     return dispatch(errorHandler(
       err, 
       dispatch({ type: 'LOAD_DATA_CATEGORY_PRODUCT_FAILED' }), 
+    ))
+  })
+}
+
+export const masterCategoryProduct = (successCB, failedCB) => async (dispatch) => {
+  await dispatch({ type: 'LOAD_DATA_MASTER_CATEGORY_PRODUCT' })
+  return API.GET('/category-product').then((response) => {
+    dispatch({
+      type: 'LOAD_DATA_MASTER_CATEGORY_PRODUCT_SUCCESS', 
+      payload: { data: response.payload.data }
+    })
+    return successCB && successCB(response.payload.data)
+  }).catch((err) => {
+    failedCB && failedCB()
+    return dispatch(errorHandler(
+      err, 
+      dispatch({ type: 'LOAD_DATA_MASTER_CATEGORY_PRODUCT_FAILED' }), 
     ))
   })
 }

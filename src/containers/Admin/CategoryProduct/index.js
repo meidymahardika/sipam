@@ -22,7 +22,7 @@ export class CategoryProduct extends Component {
         page: 1,
         perpage: 10
        },
-       isEdit: true,
+       isEdit: false,
        dataEdit: null
     }
   }
@@ -42,7 +42,9 @@ export class CategoryProduct extends Component {
 
   handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
+      isEdit: false,
+      dataEdit: null
     })
   };
   
@@ -159,7 +161,7 @@ export class CategoryProduct extends Component {
                   name="name" 
                   label="Name" 
                   initialValue={dataEdit?.name ? dataEdit?.name : null} 
-                  style={{ marginBottom: 8 }}
+                  style={{ marginBottom: 20 }}
                   rules={[
                     { required: true }
                   ]}

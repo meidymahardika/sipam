@@ -187,7 +187,7 @@ export class Menu extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  getProduct: state.productReducer
+  getProduct: state.productReducer.index
 })
 
 const mapDispatchToProps = {
