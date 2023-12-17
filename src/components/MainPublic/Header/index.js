@@ -1,17 +1,20 @@
 import React from 'react'
 import { Layout, Image } from 'antd'
+import { Link } from 'react-router-dom'
 import Logo from '../../../assets/img/logo.png'
 const { Header } = Layout
 
 export default function PublicHeader() {
   return (
     <Header className='header-public'>
-      <Image
-        width={150}
-        src={Logo}
-        preview={false}
-        style={{ marginLeft: -32 }}
-      />
+      <Link to={`/`}>
+        <Image
+          width={150}
+          src={Logo}
+          preview={false}
+          style={{ marginLeft: -32 }}
+        />
+      </Link>
       {/* <Menu
         theme="dark"
         mode="horizontal"

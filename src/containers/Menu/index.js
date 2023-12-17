@@ -21,6 +21,13 @@ export class Menu extends Component {
   componentDidMount() {
     const { actionGetProduct } = this.props
 
+    if(localStorage.getItem("data")){
+      this.setState({ data: JSON.parse(localStorage.getItem("data")) })
+    }
+    if(localStorage.getItem("totalPrice")){
+      this.setState({ totalPrice: parseInt(localStorage.getItem("totalPrice").replace(",", ""), 10) })
+    }
+
     return actionGetProduct()
   }
 
@@ -67,6 +74,15 @@ export class Menu extends Component {
     this.setState({ visible: false })
   }
 
+  handleCheckout = () => {
+    const { data, totalPrice } = this.state
+    const { history } = this.props
+
+    localStorage.setItem("data", JSON.stringify(data));
+    localStorage.setItem("totalPrice", totalPrice.toLocaleString());
+    history.push('/checkout')
+  }
+
   render() {
     const { getProduct } = this.props
     const { data, totalPrice, visible } = this.state
@@ -74,6 +90,7 @@ export class Menu extends Component {
     if (getProduct.loading) {
       return <Loading />
     } 
+
     return (
       <React.Fragment>
         <Row className='main-content' style={data.length > 0 ? { marginBottom: 64 } : null}>
@@ -91,7 +108,7 @@ export class Menu extends Component {
                           <Image
                             width={75}
                             height={75}
-                            src='https://firebasestorage.googleapis.com/v0/b/sipam-c1be9.appspot.com/o/files%2F1699446864683?alt=media&token=f41644ab-e1f3-4d8c-81bb-a56c752808d2'
+                            src={`https://firebasestorage.googleapis.com/v0/b/sipam-c1be9.appspot.com/o/files%2F${res?.img?.split("_", 1).pop()}?alt=media&${res?.img?.split("_", 2).pop()}`}
                             preview={false}
                           />
                           <Space direction='vertical' size={0}>
@@ -138,7 +155,7 @@ export class Menu extends Component {
                 <Col span={16}>
                   <Space style={{ float: 'right' }}>
                     <Text strong type='primary' style={{ color: '#F56E00' }}>Rp {totalPrice.toLocaleString()}</Text>
-                    <Button type="primary" size="large">Checkout</Button>
+                    <Button type="primary" size="large" onClick={this.handleCheckout}>Checkout</Button>
                   </Space>
                 </Col>
               </Row>
@@ -161,7 +178,7 @@ export class Menu extends Component {
                   <Image
                     width={75}
                     height={75}
-                    src='https://firebasestorage.googleapis.com/v0/b/sipam-c1be9.appspot.com/o/files%2F1699446864683?alt=media&token=f41644ab-e1f3-4d8c-81bb-a56c752808d2'
+                    src={`https://firebasestorage.googleapis.com/v0/b/sipam-c1be9.appspot.com/o/files%2F${item?.img?.split("_", 1).pop()}?alt=media&${item?.img?.split("_", 2).pop()}`}
                     preview={false}
                   />
                   <Space direction='vertical' size={0}>
