@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Loading } from '../../../components'
-import { Row, Col, Card, Button, Breadcrumb, PageHeader, Table, Modal, Form, Input, Space, message } from 'antd'
+import { Row, Col, Card, Button, Breadcrumb, PageHeader, Table, Modal, Form, Input, Space, Pagination, message } from 'antd'
 import { GroupOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { columns } from './columns'
 import { listCategoryProduct, createCategoryProduct, deleteCategoryProduct, updateCategoryProduct, unmountListCategoryProduct } from '../../../redux/actions/categoryProduct/categoryProductAction'
@@ -100,9 +100,17 @@ export class CategoryProduct extends Component {
     });
   }
 
+  pagination = (page, perpage) => {
+    const { meta } = this.state;
+    const { actionGetCategoryProduct } = this.props;
+    meta.page = page
+    meta.perpage = perpage
+    return actionGetCategoryProduct(meta)
+  }
+
   render() {
     const { visible, submitLoading, isEdit, dataEdit } = this.state
-    const { getData: { data, loading } } = this.props
+    const { getData: { data, pagination, loading } } = this.props
 
     if(loading){
       return <Loading />
@@ -136,6 +144,17 @@ export class CategoryProduct extends Component {
                   <Table 
                     dataSource={data} 
                     columns={columns(this.handleEdit, this.handleDelete)} 
+                    pagination={false}
+                  />
+                </Col>
+                {/* Pagination */}
+                <Col span={24}>
+                  <Pagination
+                    total={pagination.total}
+                    onChange={this.pagination}
+                    current={pagination.page}
+                    pageSize={pagination.perpage}
+                    showTotal={(total, range) => `Showing ${range[0]}-${range[1]} of ${total} Data`}
                   />
                 </Col>
               </Row>

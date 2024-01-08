@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import { Loading } from '../../../components'
-import { Row, Col, Card, Button, Breadcrumb, PageHeader, Table, Modal, Form, Input, InputNumber, Space, Upload, Select, message } from 'antd'
+import { Row, Col, Card, Button, Breadcrumb, PageHeader, Table, Modal, Form, Input, InputNumber, Space, Upload, Select, Typography, Tag, Image, Pagination, message } from 'antd'
 import { ShoppingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { columns } from './columns'
 import { masterCategoryProduct, unmountMasterCategoryProduct } from '../../../redux/actions/categoryProduct/categoryProductAction'
-import { listProduct, createProduct, unmountListProduct } from '../../../redux/actions/product/productAction'
+import { listProduct, createProduct, updateStatusProduct, unmountListProduct } from '../../../redux/actions/product/productAction'
 
+const { Text } = Typography
 export class Product extends Component {
   formRef = React.createRef();
   constructor(props) {
@@ -14,6 +16,7 @@ export class Product extends Component {
   
     this.state = {
        visible: false,
+       visibleDetail: false,
        submitLoading: false,
        deleteLoading: false,
        valueForm: null,
@@ -38,9 +41,17 @@ export class Product extends Component {
     })
   };
 
+  showDetail = (data) => {
+    this.setState({
+      visibleDetail: true,
+      dataDetail: data
+    })
+  };
+
   handleCancel = () => {
     this.setState({
-      visible: false
+      visible: false,
+      visibleDetail: false
     })
   };
   
@@ -91,16 +102,39 @@ export class Product extends Component {
       this.setState({ submitLoading: false }, () => message.error(err))
     })
   }
+
+  handleSetStatus = (status, id) => {
+    const { meta } = this.state
+    const { actionUpdateStatus, acttionListProduct } = this.props
+    const values = {
+      status: status
+    }
+    return actionUpdateStatus(id, values, () => {
+      this.setState({ submitLoading: false }, () => {
+        message.success(`Successfully changed status`)
+        return acttionListProduct(meta)
+      })
+    }, (err) => {
+      this.setState({ submitLoading: false }, () => message.error(err))
+    })
+  }
+
+  pagination = (page, perpage) => {
+    const { meta } = this.state;
+    const { acttionListProduct } = this.props;
+    meta.page = page
+    meta.perpage = perpage
+    return acttionListProduct(meta)
+  }
   
   render() {
-    const { visible, submitLoading, image } = this.state
-    const { getDataCategoryProduct, getListProduct: { data, loading } } = this.props
+    const { visible, visibleDetail, dataDetail, submitLoading } = this.state
+    const { getDataCategoryProduct, getListProduct: { data, pagination, loading } } = this.props
 
     if(loading){
       return <Loading />
     }
 
-    console.log(2, image);
     return (
       <React.Fragment>
         <Row className='main-content'>
@@ -128,7 +162,18 @@ export class Product extends Component {
                 <Col span={24}>
                   <Table 
                     dataSource={data} 
-                    columns={columns(this.handleEdit, this.handleDelete)} 
+                    columns={columns(this.handleSetStatus, this.showDetail)} 
+                    pagination={false}
+                  />
+                </Col>
+                {/* Pagination */}
+                <Col span={24}>
+                  <Pagination
+                    total={pagination.total}
+                    onChange={this.pagination}
+                    current={pagination.page}
+                    pageSize={pagination.perpage}
+                    showTotal={(total, range) => `Showing ${range[0]}-${range[1]} of ${total} Data`}
                   />
                 </Col>
               </Row>
@@ -202,6 +247,74 @@ export class Product extends Component {
             </Row>
           </Form>
         </Modal>
+        <Modal 
+          title='Detail Product'
+          visible={visibleDetail} 
+          onCancel={this.handleCancel} 
+          footer={false}
+          width={700}
+          destroyOnClose
+        >
+          <Row gutter={[0,16]}>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Category Product</Text>
+                <Text strong>{dataDetail?.category_name}</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Name</Text>
+                <Text strong>{dataDetail?.name}</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Created Date</Text>
+                <Text strong>{moment(dataDetail?.created_date).format('ll')}</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Updated Date</Text>
+                <Text strong>{moment(dataDetail?.updated_date).format('ll')}</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Price</Text>
+                <Text strong>Rp {dataDetail?.price?.toLocaleString()}</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Status</Text>
+                {
+                  dataDetail?.is_active === 1 ?
+                    <Tag color="success">Ready</Tag>
+                  : dataDetail?.is_active === 0 ?
+                    <Tag color="error">Not Ready</Tag>
+                  : null
+                }
+              </Space>
+            </Col>
+            <Col span={24}>
+              <Space direction='vertical' size={0}>
+                <Text>Image</Text>
+                <Image
+                  width={150}
+                  src={`https://firebasestorage.googleapis.com/v0/b/sipam-c1be9.appspot.com/o/files%2F${dataDetail?.img?.split("_", 1).pop()}?alt=media&${dataDetail?.img?.split("_", 2).pop()}`}
+                />
+              </Space>
+            </Col>
+            <Col span={24}>
+              <Space direction='vertical' size={0}>
+                <Text>Description</Text>
+                <Text strong>{dataDetail?.description}</Text>
+              </Space>
+            </Col>
+          </Row>
+        </Modal>
       </React.Fragment>
     )
   }
@@ -221,6 +334,7 @@ const mapDispatchToProps = {
   actionMasterCategoryProduct: masterCategoryProduct,
   acttionListProduct: listProduct,
   actionCreate: createProduct,
+  actionUpdateStatus: updateStatusProduct,
   unmountMasterCategoryProduct: unmountMasterCategoryProduct,
   unmountListProduct: unmountListProduct
 }

@@ -59,3 +59,11 @@ export const createProduct = (value, successCB, failedCB) => () => {
     })
   })
 }
+
+export const updateStatusProduct = (id, value, successCB, failedCB) => () => {
+  API.PUT(`/product/update-status/${id}`, value).then((response) => {
+    return successCB && successCB(response)
+  }).catch((err) => {
+    return failedCB && failedCB(err)
+  })
+}

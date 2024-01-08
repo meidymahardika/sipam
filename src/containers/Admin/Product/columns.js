@@ -6,7 +6,7 @@ import {
   SearchOutlined
 } from '@ant-design/icons';
 
-export const columns = (props) => {
+export const columns = (handleSetStatus, showDetail) => {
   return [
     {
       title: 'No',
@@ -45,22 +45,22 @@ export const columns = (props) => {
       key: 'action',
       width: 40,
       align: 'right',
-      render: (_, record) => (
+      render: (record) => (
         <Space>
           <Button type="primary" icon={<EditOutlined />}>
             Edit
           </Button>
           {
             record.is_active === 1 ?
-              <Button type="danger" icon={<CloseCircleOutlined />} ghost style={{ width: 150 }}>
+              <Button onClick={() => handleSetStatus(0, record.id)} type="danger" icon={<CloseCircleOutlined />} ghost style={{ width: 150 }}>
                 Set Not Ready
               </Button>
             :
-              <Button type="primary" icon={<CheckCircleOutlined />} ghost style={{ width: 150 }}>
+              <Button onClick={() => handleSetStatus(1, record.id)} type="primary" icon={<CheckCircleOutlined />} ghost style={{ width: 150 }}>
                 Set Ready
               </Button>
           }
-          <Button icon={<SearchOutlined />}>Detail</Button>
+          <Button onClick={() => showDetail(record)} icon={<SearchOutlined />}>Detail</Button>
           {/* <Button type="danger" icon={<DeleteOutlined />}>
             Delete
           </Button> */}
