@@ -1,51 +1,64 @@
-import { Space, Tag } from 'antd'
+import { Button, Tag } from 'antd'
 
-export const columns = (props) => {
+export const columns = (showDetail) => {
   return [
     {
+      title: 'Queue Number',
+      key: 'queue',
+      render: (record) => record.queue,
+    },
+    {
+      title: 'Order Number',
+      key: 'orderNumber',
+      render: (record) => record.orderNumber,
+    },
+    {
       title: 'Name',
-      dataIndex: 'name',
       key: 'name',
-      render: (text) => text,
+      render: (record) => record.name,
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Email',
+      key: 'email',
+      render: (record) => record.email,
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Phone',
+      key: 'phone',
+      render: (record) => record.phone,
     },
     {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: (_, { tags }) => (
-        <>
-          {tags.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
+      title: 'Order Date',
+      key: 'date',
+      render: (record) => record.date,
+    },
+    {
+      title: 'Total Price',
+      key: 'total',
+      render: (record) => record.total,
+    },
+    {
+      title: 'Status',
+      key: 'status',
+      render: (record) => (
+        record.status === 'WAITING' ?
+          <Tag color="warning">
+            Waiting for Payment
+          </Tag>
+        : record.status === 'PAID' ?
+          <Tag color="success">
+            Paid
+          </Tag>
+        : null
       ),
     },
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          {/* <a>Invite {record.name}</a>
-          <a>Delete</a> */}
-        </Space>
+      render: (record) => (
+        <Button type='primary' ghost onClick={showDetail}>
+          Check Detail
+        </Button>
       ),
     },
   ]
