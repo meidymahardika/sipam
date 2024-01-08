@@ -30,6 +30,7 @@ export class AppRoute extends Component {
         <Switch>
           <PublicRoute exact path='/' component={Containers.Menu} passProps={this.props} private={false} />
           <PublicRoute exact path='/checkout' component={Containers.Checkout} passProps={this.props} private={false} />
+          <PublicRoute exact path='/detail-order' component={Containers.DetailOrder} passProps={this.props} private={false} />
           <PublicRoute exact path='/admin' component={Containers.Login} passProps={this.props} private={false} />
           <PrivateRoute exact path='/admin/order' component={Containers.Order} passProps={this.props} private={true} />
           <PrivateRoute exact path='/admin/product' component={Containers.Product} passProps={this.props} private={true} />

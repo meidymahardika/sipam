@@ -8,6 +8,11 @@ const { Text } = Typography
 const { Option } = Select
 
 export class Checkout extends Component {
+
+  submitOrder = () => {
+    this.props.history.push('/detail-order')
+  }
+
   render() {
     console.log(1, JSON.parse(localStorage.getItem("data")))
     return (
@@ -96,7 +101,7 @@ export class Checkout extends Component {
                 <Row>
                   <Col span={24} style={{ marginTop: 16 }}>
                     <Form.Item>
-                      <Button type="primary" block>Order</Button>
+                      <Button type="primary" block onClick={this.submitOrder}>Order</Button>
                     </Form.Item>
                   </Col>
                 </Row>
