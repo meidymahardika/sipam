@@ -67,3 +67,17 @@ export const updateStatusProduct = (id, value, successCB, failedCB) => () => {
     return failedCB && failedCB(err)
   })
 }
+
+export const updateProduct = (value, successCB, failedCB) => () => {
+  return new Promise((resolve, reject) => {
+    const data = new FormData();
+    for (const [name, val] of Object.entries(value)) {
+      data.append(name, val)
+    }
+    API.POST_FORM_DATA('/product/update', data).then((response) => {
+      return successCB && successCB(response)
+    }).catch((err) => {
+      return failedCB && failedCB(err)
+    })
+  })
+}

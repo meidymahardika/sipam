@@ -6,7 +6,7 @@ import { Row, Col, Card, Button, Breadcrumb, PageHeader, Table, Modal, Form, Inp
 import { ShoppingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons'
 import { columns } from './columns'
 import { masterCategoryProduct, unmountMasterCategoryProduct } from '../../../redux/actions/categoryProduct/categoryProductAction'
-import { listProduct, createProduct, updateStatusProduct, unmountListProduct } from '../../../redux/actions/product/productAction'
+import { listProduct, createProduct, updateProduct, updateStatusProduct, unmountListProduct } from '../../../redux/actions/product/productAction'
 
 const { Text } = Typography
 export class Product extends Component {
@@ -24,15 +24,17 @@ export class Product extends Component {
         page: 1,
         perpage: 20
        },
-       image: null
+       image: null,
+       isEdit: false,
+       dataEdit: null
     }
   }
   
   componentDidMount() {
     const { meta } = this.state
-    const { actionMasterCategoryProduct, acttionListProduct } = this.props
+    const { actionMasterCategoryProduct, actionListProduct } = this.props
     actionMasterCategoryProduct()
-    acttionListProduct(meta)
+    actionListProduct(meta)
   }
 
   showModal = () => {
@@ -51,7 +53,9 @@ export class Product extends Component {
   handleCancel = () => {
     this.setState({
       visible: false,
-      visibleDetail: false
+      visibleDetail: false,
+      isEdit: false,
+      dataEdit: null
     })
   };
   
@@ -88,7 +92,7 @@ export class Product extends Component {
 
   onAdd = (values) => {
     const { meta } = this.state
-    const { actionCreate, acttionListProduct } = this.props;
+    const { actionCreate, actionListProduct } = this.props;
     values.image = values.image.file
     values.isActive = 0
     this.setState({ submitLoading: true })
@@ -96,7 +100,29 @@ export class Product extends Component {
       this.setState({ submitLoading: false }, () => {
         message.success('Data created successfully')
         this.setState({ visible: false })
-        return acttionListProduct(meta)
+        return actionListProduct(meta)
+      })
+    }, (err) => {
+      this.setState({ submitLoading: false }, () => message.error(err))
+    })
+  }
+
+  onUpdate = (values) => {
+    const { meta, dataEdit } = this.state
+    const { actionUpdate, actionListProduct } = this.props;
+    if(values.image){
+      values.image = values.image.file
+    }else{
+      delete values.image
+    }
+    values.id = dataEdit?.id
+    values.isActive = dataEdit?.is_active
+    this.setState({ submitLoading: true })
+    return actionUpdate(values, () => {
+      this.setState({ submitLoading: false }, () => {
+        message.success('Data updated successfully')
+        this.setState({ visible: false })
+        return actionListProduct(meta)
       })
     }, (err) => {
       this.setState({ submitLoading: false }, () => message.error(err))
@@ -105,35 +131,41 @@ export class Product extends Component {
 
   handleSetStatus = (status, id) => {
     const { meta } = this.state
-    const { actionUpdateStatus, acttionListProduct } = this.props
+    const { actionUpdateStatus, actionListProduct } = this.props
     const values = {
       status: status
     }
     return actionUpdateStatus(id, values, () => {
       this.setState({ submitLoading: false }, () => {
         message.success(`Successfully changed status`)
-        return acttionListProduct(meta)
+        return actionListProduct(meta)
       })
     }, (err) => {
       this.setState({ submitLoading: false }, () => message.error(err))
     })
   }
 
+  handleEdit = (data) => {
+    this.setState({ visible: true, isEdit: true, dataEdit: data })
+  }
+
   pagination = (page, perpage) => {
     const { meta } = this.state;
-    const { acttionListProduct } = this.props;
+    const { actionListProduct } = this.props;
     meta.page = page
     meta.perpage = perpage
-    return acttionListProduct(meta)
+    return actionListProduct(meta)
   }
   
   render() {
-    const { visible, visibleDetail, dataDetail, submitLoading } = this.state
+    const { visible, visibleDetail, dataDetail, isEdit, dataEdit, submitLoading } = this.state
     const { getDataCategoryProduct, getListProduct: { data, pagination, loading } } = this.props
 
     if(loading){
       return <Loading />
     }
+
+    console.log(dataEdit);
 
     return (
       <React.Fragment>
@@ -162,7 +194,7 @@ export class Product extends Component {
                 <Col span={24}>
                   <Table 
                     dataSource={data} 
-                    columns={columns(this.handleSetStatus, this.showDetail)} 
+                    columns={columns(this.handleEdit, this.handleSetStatus, this.showDetail)} 
                     pagination={false}
                   />
                 </Col>
@@ -181,7 +213,7 @@ export class Product extends Component {
           </Col>
         </Row>
         <Modal 
-          title='Add Product'
+          title={isEdit ? 'Edit Product' : 'Add Product'}
           visible={visible} 
           onCancel={this.handleCancel} 
           footer={false}
@@ -191,7 +223,13 @@ export class Product extends Component {
           <Form 
             ref={this.formRef}
             layout="vertical"
-            onFinish={this.onAdd}
+            onFinish={isEdit ? this.onUpdate : this.onAdd}
+            initialValues={{
+              idCategoryProduct: dataEdit?.id_category_product,
+              name: dataEdit?.name,
+              price: dataEdit?.price,
+              description: dataEdit?.description
+            }}
           >
             <Row>
               <Col span={24}>
@@ -241,7 +279,7 @@ export class Product extends Component {
               <Col span={24}>
                 <Space style={{ float: 'right' }}>
                   <Button onClick={this.handleCancel}>Cancel</Button>
-                  <Button htmlType="submit" type="primary" loading={submitLoading}>Add</Button>
+                  <Button htmlType="submit" type="primary" loading={submitLoading}>{isEdit ? 'Update' : 'Add'}</Button>
                 </Space>
               </Col>
             </Row>
@@ -332,8 +370,9 @@ const mapStateToProps = (state) => ({
   
 const mapDispatchToProps = {
   actionMasterCategoryProduct: masterCategoryProduct,
-  acttionListProduct: listProduct,
+  actionListProduct: listProduct,
   actionCreate: createProduct,
+  actionUpdate: updateProduct,
   actionUpdateStatus: updateStatusProduct,
   unmountMasterCategoryProduct: unmountMasterCategoryProduct,
   unmountListProduct: unmountListProduct

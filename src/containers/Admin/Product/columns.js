@@ -6,7 +6,7 @@ import {
   SearchOutlined
 } from '@ant-design/icons';
 
-export const columns = (handleSetStatus, showDetail) => {
+export const columns = (handleEdit, handleSetStatus, showDetail) => {
   return [
     {
       title: 'No',
@@ -47,7 +47,7 @@ export const columns = (handleSetStatus, showDetail) => {
       align: 'right',
       render: (record) => (
         <Space>
-          <Button type="primary" icon={<EditOutlined />}>
+          <Button onClick={() => handleEdit(record)} type="primary" icon={<EditOutlined />}>
             Edit
           </Button>
           {
