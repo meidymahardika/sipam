@@ -165,8 +165,6 @@ export class Product extends Component {
       return <Loading />
     }
 
-    console.log(dataEdit);
-
     return (
       <React.Fragment>
         <Row className='main-content'>
@@ -357,7 +355,7 @@ export class Product extends Component {
     )
   }
   componentWillUnmount() {
-    const { unmountMasterCategoryProduct } = this.props
+    const { unmountMasterCategoryProduct, unmountListProduct } = this.props
     unmountMasterCategoryProduct()
     unmountListProduct()
   }

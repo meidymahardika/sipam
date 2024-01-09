@@ -1,4 +1,5 @@
 import { Button, Tag } from 'antd'
+import moment from 'moment'
 
 export const columns = (showDetail) => {
   return [
@@ -10,7 +11,7 @@ export const columns = (showDetail) => {
     {
       title: 'Order Number',
       key: 'orderNumber',
-      render: (record) => record.orderNumber,
+      render: (record) => record.order_number,
     },
     {
       title: 'Name',
@@ -18,24 +19,14 @@ export const columns = (showDetail) => {
       render: (record) => record.name,
     },
     {
-      title: 'Email',
-      key: 'email',
-      render: (record) => record.email,
-    },
-    {
-      title: 'Phone',
-      key: 'phone',
-      render: (record) => record.phone,
-    },
-    {
       title: 'Order Date',
       key: 'date',
-      render: (record) => record.date,
+      render: (record) => moment(record.created_at).format('lll'),
     },
     {
       title: 'Total Price',
       key: 'total',
-      render: (record) => record.total,
+      render: (record) => `Rp ${record.total.toLocaleString()}`,
     },
     {
       title: 'Status',

@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Loading } from '../../../components'
 import { Row, Col, Card, Breadcrumb, PageHeader, Table, Modal, Space, Typography, Tag, Divider, Button } from 'antd'
 import { DollarOutlined } from '@ant-design/icons'
 import { columns } from './columns'
+import { listOrder, unmountListOrder } from '../../../redux/actions/order/orderAction'
 
 const { Text } = Typography
 
@@ -48,8 +50,18 @@ export class Order extends Component {
   
     this.state = {
        visible: false,
-       submitLoading: false
+       submitLoading: false,
+       meta: {
+        page: 1,
+        perpage: 20
+       },
     }
+  }
+
+  componentDidMount() {
+    const { meta } = this.state
+    const { actionListOrder } = this.props
+    actionListOrder(meta)
   }
 
   showDetail = () => {
@@ -62,6 +74,12 @@ export class Order extends Component {
 
   render() {
     const { visible, submitLoading } = this.state
+    const { getListOrder: { data, pagination, loading} } = this.props
+
+    if(loading){
+      return <Loading />
+    }
+
     return (
       <React.Fragment>
         <Row className='main-content'>
@@ -104,14 +122,38 @@ export class Order extends Component {
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
+                <Text>Name</Text>
+                <Text strong>Jhon Doe</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Email</Text>
+                <Text strong>jhon@yopmail.com</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Phone</Text>
+                <Text strong>08976543212</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Order Date</Text>
+                <Text strong>2024-01-09</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
                 <Text>Total Price</Text>
                 <Text strong>200,000 IDR</Text>
               </Space>
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
-                <Text>Order Date</Text>
-                <Text strong>TRK-08012400002</Text>
+                <Text>Payment Method</Text>
+                <Text strong>Cash</Text>
               </Space>
             </Col>
             <Col span={12}>
@@ -120,12 +162,6 @@ export class Order extends Component {
                 <Tag color="warning">
                   Waiting for Payment
                 </Tag>
-              </Space>
-            </Col>
-            <Col span={24}>
-              <Space direction='vertical' size={0}>
-                <Text>Name</Text>
-                <Text strong>Jhon Doe</Text>
               </Space>
             </Col>
           </Row>
@@ -174,10 +210,20 @@ export class Order extends Component {
       
     )
   }
+  componentWillUnmount() {
+    const { unmountListOrder } = this.props
+    unmountListOrder()
+  }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+  getListOrder: state.orderReducer.list
+})
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  actionListOrder: listOrder,
+  unmountListOrder: unmountListOrder
+
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Order)

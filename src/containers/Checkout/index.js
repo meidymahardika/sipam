@@ -1,26 +1,56 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Row, Col, Space, Card, Typography, Image, Button, Form, Input, Select } from 'antd'
+import moment from 'moment'
+import { Row, Col, Space, Card, Typography, Image, Button, Form, Input, Select, message } from 'antd'
 import { EditOutlined } from '@ant-design/icons'
+import { createOrder } from '../../redux/actions/order/orderAction'
+import { convertStringToInteger } from '../../utils/strToInt'
+import { getQueue } from '../../redux/actions/order/orderAction'
 
 const { Text } = Typography
 const { Option } = Select
 
 export class Checkout extends Component {
+  formRef = React.createRef();
+  constructor(props) {
+    super(props)
+  
+    this.state = {
+       submitLoading: false,
+    }
+  }
 
-  submitOrder = () => {
-    this.props.history.push('/detail-order')
+  handleSubmitOrder = (values) => {
+    const { actionGetQueue, actionCreate } = this.props;
+    actionGetQueue((res) => {
+      this.setState({ submitLoading: true })
+      values.orderNumber = `SPM${moment().format('DDMMYYHHmmss')}${(moment().valueOf()).toString().slice(-4)}`
+      values.queue = res.max_queue+1
+      values.total = convertStringToInteger(localStorage.getItem("totalPrice"))
+      values.detail = JSON.parse(localStorage.getItem("data"))
+      return actionCreate(values, () => {
+        this.setState({ submitLoading: false }, () => {
+          
+          message.success('Order successfully')
+          this.setState({ visible: false })
+          this.props.history.push('/detail-order')
+        })
+      }, (err) => {
+        this.setState({ submitLoading: false }, () => message.error(err))
+      })
+    })
   }
 
   render() {
     console.log(1, JSON.parse(localStorage.getItem("data")))
+    const { submitLoading } = this.state
     return (
       <React.Fragment>
         <Row className='main-content'>
           <Col span={24}>
             <Card className='rounded' bodyStyle={{ padding: 16 }}>
-              <Form layout="vertical">
+              <Form layout="vertical" onFinish={this.handleSubmitOrder}>
                 <Row>
                   <Col span={24} style={{ marginBottom: 16 }}>
                     <Text className='text-title'>Data Customer</Text>
@@ -35,7 +65,7 @@ export class Checkout extends Component {
                     </Form.Item>
                     <Form.Item
                       label="Phone Number"
-                      name="mobile"
+                      name="phone"
                       style={{ marginBottom: 8 }}
                     >
                       <Input />
@@ -88,8 +118,8 @@ export class Checkout extends Component {
                       style={{ marginBottom: 8 }}
                     >
                       <Select>
-                        <Option key="1" value="CASH">Cash</Option>
-                        <Option key="2" value="BANK_TRANSFER">Bank Transfer</Option>
+                        <Option key="1" value={0}>Cash</Option>
+                        <Option key="2" value={1}>Bank Transfer</Option>
                       </Select>
                     </Form.Item>
                   </Col>
@@ -101,7 +131,7 @@ export class Checkout extends Component {
                 <Row>
                   <Col span={24} style={{ marginTop: 16 }}>
                     <Form.Item>
-                      <Button type="primary" block onClick={this.submitOrder}>Order</Button>
+                      <Button htmlType='submit' type="primary" size='large' block loading={submitLoading}>Order</Button>
                     </Form.Item>
                   </Col>
                 </Row>
@@ -116,6 +146,9 @@ export class Checkout extends Component {
 
 const mapStateToProps = (state) => ({})
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  actionGetQueue: getQueue,
+  actionCreate: createOrder
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout)
