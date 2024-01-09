@@ -94,10 +94,34 @@ export class Report extends Component {
           footer={false}
         >
           <Row gutter={[0,16]}>
+          <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Order Number</Text>
+                <Text strong>TRK-08012400002</Text>
+              </Space>
+            </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
-                <Text>Report Number</Text>
-                <Text strong>TRK-08012400002</Text>
+                <Text>Name</Text>
+                <Text strong>Jhon Doe</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Email</Text>
+                <Text strong>jhon@yopmail.com</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Phone</Text>
+                <Text strong>08976543212</Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Order Date</Text>
+                <Text strong>2024-01-09</Text>
               </Space>
             </Col>
             <Col span={12}>
@@ -108,22 +132,16 @@ export class Report extends Component {
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
-                <Text>Report Date</Text>
-                <Text strong>TRK-08012400002</Text>
+                <Text>Payment Method</Text>
+                <Text strong>Cash</Text>
               </Space>
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
                 <Text>Status</Text>
-                <Tag color="warning">
-                  Waiting for Payment
+                <Tag color="blue">
+                  Done
                 </Tag>
-              </Space>
-            </Col>
-            <Col span={24}>
-              <Space direction='vertical' size={0}>
-                <Text>Name</Text>
-                <Text strong>Jhon Doe</Text>
               </Space>
             </Col>
           </Row>

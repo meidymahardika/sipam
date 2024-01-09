@@ -13,16 +13,6 @@ export const columns = (showDetail) => {
       render: (record) => record.name,
     },
     {
-      title: 'Email',
-      key: 'email',
-      render: (record) => record.email,
-    },
-    {
-      title: 'Phone',
-      key: 'phone',
-      render: (record) => record.phone,
-    },
-    {
       title: 'Order Date',
       key: 'date',
       render: (record) => record.date,
