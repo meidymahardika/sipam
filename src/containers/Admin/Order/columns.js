@@ -47,7 +47,7 @@ export const columns = (showDetail) => {
       title: 'Action',
       key: 'action',
       render: (record) => (
-        <Button type='primary' ghost onClick={showDetail}>
+        <Button type='primary' ghost onClick={() => showDetail(record)}>
           Check Detail
         </Button>
       ),

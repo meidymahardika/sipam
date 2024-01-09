@@ -5,6 +5,10 @@ export const unmountListOrder = () => (dispatch) => {
   return dispatch({type: 'UNMOUNT_DATA_ORDER'})
 }
 
+export const unmountDetailOrder = () => (dispatch) => {
+  return dispatch({type: 'UNMOUNT_DETAIL_ORDER'})
+}
+
 export const createOrder = (value, successCB, failedCB) => () => {
   API.POST('/order', value).then((response) => {
     return successCB && successCB(response)
@@ -65,5 +69,30 @@ export const listOrder = (meta) => async (dispatch) => {
       err, 
       dispatch({ type: 'LOAD_DATA_ORDER_FAILED' }), 
     ))
+  })
+}
+
+export const detailOrder = (id, successCB, failedCB) => async (dispatch) => {
+  await dispatch({ type: 'LOAD_DETAIL_ORDER' })
+  API.GET(`/order/detail/${id}`).then((response) => {
+    dispatch({
+      type: 'LOAD_DETAIL_ORDER_SUCCESS', 
+      payload: { data: response.payload.data }
+    })
+    return successCB && successCB(response.payload.data)
+  }).catch((err) => {
+    failedCB && failedCB()
+    return dispatch(errorHandler(
+      err, 
+      dispatch({ type: 'LOAD_DETAIL_ORDER_FAILED' }), 
+    ))
+  })
+}
+
+export const updateStatusPaid = (id, successCB, failedCB) => () => {
+  API.PUT(`/order/update-status-paid/${id}`).then((response) => {
+    return successCB && successCB(response)
+  }).catch((err) => {
+    return failedCB && failedCB(err)
   })
 }

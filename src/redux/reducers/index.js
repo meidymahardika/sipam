@@ -6,6 +6,7 @@ import productListReducer from './product/productListReducer'
 import productReducer from './product/productReducer'
 import queueReducer from './order/queueReducer';
 import orderListReducer from './order/orderListReducer';
+import orderDetailReducer from './order/orderDetailReducer';
 
 export default combineReducers({
     authReducer,
@@ -19,6 +20,7 @@ export default combineReducers({
     }),
     orderReducer: combineReducers({
         queue: queueReducer,
-        list: orderListReducer
+        list: orderListReducer,
+        detail: orderDetailReducer
     }),
 })

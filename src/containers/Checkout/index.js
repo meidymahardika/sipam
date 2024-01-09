@@ -56,7 +56,6 @@ export class Checkout extends Component {
   }
 
   render() {
-    console.log(1, JSON.parse(localStorage.getItem("data")))
     const { submitLoading } = this.state
     return (
       <React.Fragment>

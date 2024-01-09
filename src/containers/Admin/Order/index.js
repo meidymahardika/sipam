@@ -1,48 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import moment from 'moment'
 import { Loading } from '../../../components'
-import { Row, Col, Card, Breadcrumb, PageHeader, Table, Modal, Space, Typography, Tag, Divider, Button } from 'antd'
+import { Row, Col, Card, Breadcrumb, PageHeader, Table, Modal, Space, Typography, Tag, Divider, Button, Pagination, Skeleton, message } from 'antd'
 import { DollarOutlined } from '@ant-design/icons'
 import { columns } from './columns'
-import { listOrder, unmountListOrder } from '../../../redux/actions/order/orderAction'
+import { listOrder, detailOrder, updateStatusPaid, unmountListOrder, unmountDetailOrder } from '../../../redux/actions/order/orderAction'
 
 const { Text } = Typography
-
-const data = [
-  {
-    key: '1',
-    queue: 1,
-    orderNumber: 'TRK-08012400001',
-    name: 'Jhon Doe',
-    email: 'jhon@yopmail.com',
-    phone: '081234567890',
-    date: '17/10/23 13:30:00',
-    total: 200000,
-    status: 'WAITING'
-  },
-  {
-    key: '2',
-    queue: 2,
-    orderNumber: 'TRK-08012400002',
-    name: 'Jhon Doe',
-    email: 'jhon@yopmail.com',
-    phone: '081234567890',
-    date: '17/10/23 13:30:00',
-    total: 200000,
-    status: 'WAITING'
-  },
-  {
-    key: '3',
-    queue: 3,
-    orderNumber: 'TRK-08012400003',
-    name: 'Jhon Doe',
-    email: 'jhon@yopmail.com',
-    phone: '081234567890',
-    date: '17/10/23 13:30:00',
-    total: 200000,
-    status: 'PAID'
-  },
-];
 
 export class Order extends Component {
   constructor(props) {
@@ -64,17 +29,44 @@ export class Order extends Component {
     actionListOrder(meta)
   }
 
-  showDetail = () => {
-    this.setState({ visible: true })
+  showDetail = (data) => {
+    const { actionDetailOrder } = this.props
+    this.setState({ 
+      visible: true,
+      dataDetail: data
+    })
+    actionDetailOrder(data.id)
   }
 
   hideDetail = () => {
     this.setState({ visible: false })
   }
 
+  handleAccept = (id) => {
+    const { meta } = this.state
+    const { actionUpdateStatusPaid, actionListOrder } = this.props
+
+    return actionUpdateStatusPaid(id, () => {
+      this.setState({ submitLoading: false, visible: false }, () => {
+        message.success(`Successfully changed status`)
+        return actionListOrder(meta)
+      })
+    }, (err) => {
+      this.setState({ submitLoading: false }, () => message.error(err))
+    })
+  }
+
+  pagination = (page, perpage) => {
+    const { meta } = this.state;
+    const { actionListOrder } = this.props;
+    meta.page = page
+    meta.perpage = perpage
+    return actionListOrder(meta)
+  }
+
   render() {
-    const { visible, submitLoading } = this.state
-    const { getListOrder: { data, pagination, loading} } = this.props
+    const { visible, dataDetail, submitLoading } = this.state
+    const { getListOrder: { data, pagination, loading}, getDetailOrder } = this.props
 
     if(loading){
       return <Loading />
@@ -99,7 +91,21 @@ export class Order extends Component {
                   />
                 </Col>
                 <Col span={24}>
-                  <Table columns={columns(this.showDetail)} dataSource={data} />
+                  <Table 
+                    columns={columns(this.showDetail)} 
+                    dataSource={data}
+                    pagination={false}
+                  />
+                </Col>
+                {/* Pagination */}
+                <Col span={24}>
+                  <Pagination
+                    total={pagination.total}
+                    onChange={this.pagination}
+                    current={pagination.page}
+                    pageSize={pagination.perpage}
+                    showTotal={(total, range) => `Showing ${range[0]}-${range[1]} of ${total} Data`}
+                  />
                 </Col>
               </Row>
             </Card>
@@ -117,92 +123,123 @@ export class Order extends Component {
             <Col span={12}>
               <Space direction='vertical' size={0}>
                 <Text>Order Number</Text>
-                <Text strong>TRK-08012400002</Text>
+                <Text strong>{dataDetail?.order_number}</Text>
               </Space>
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
                 <Text>Name</Text>
-                <Text strong>Jhon Doe</Text>
+                <Text strong>{dataDetail?.name}</Text>
               </Space>
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
                 <Text>Email</Text>
-                <Text strong>jhon@yopmail.com</Text>
+                <Text strong>{dataDetail?.email}</Text>
               </Space>
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
                 <Text>Phone</Text>
-                <Text strong>08976543212</Text>
+                <Text strong>{dataDetail?.phone}</Text>
               </Space>
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
                 <Text>Order Date</Text>
-                <Text strong>2024-01-09</Text>
+                <Text strong>{moment(dataDetail?.created_at).format('lll')}</Text>
               </Space>
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
                 <Text>Total Price</Text>
-                <Text strong>200,000 IDR</Text>
+                <Text strong>Rp {dataDetail?.total.toLocaleString()}</Text>
               </Space>
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
                 <Text>Payment Method</Text>
-                <Text strong>Cash</Text>
+                <Text strong>{dataDetail?.payment_method === 1 ? 'Bank Transfer' : 'Cash'}</Text>
               </Space>
             </Col>
             <Col span={12}>
               <Space direction='vertical' size={0}>
                 <Text>Status</Text>
-                <Tag color="warning">
-                  Waiting for Payment
-                </Tag>
+                {
+                  dataDetail?.status === 'WAITING' ?
+                    <Tag color="warning">
+                      Waiting for Payment
+                    </Tag>
+                  : dataDetail?.status === 'PAID' ?
+                    <Tag color="success">
+                      Paid
+                    </Tag>
+                  : null
+                }
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space direction='vertical' size={0}>
+                <Text>Queue</Text>
+                <Text strong>{dataDetail?.queue}</Text>
               </Space>
             </Col>
           </Row>
           <Divider />
-          <Row style={{ marginBottom: 8 }}>
-            <Col span={8}>
-              <Text>Product Name</Text>
-            </Col>
-            <Col span={8}>
-              <Text>Qty</Text>
-            </Col>
-            <Col span={8}>
-              <Text>Sub Total</Text>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={8}>
-              <Text strong>Fried Chicken</Text>
-            </Col>
-            <Col span={8}>
-              <Text strong>2</Text>
-            </Col>
-            <Col span={8}>
-              <Text strong>30,000</Text>
-            </Col>
-            <Col span={8}>
-              <Text strong>Iced Tea</Text>
-            </Col>
-            <Col span={8}>
-              <Text strong>2</Text>
-            </Col>
-            <Col span={8}>
-              <Text strong>10,000</Text>
-            </Col>
-          </Row>
+          {
+            getDetailOrder.loading ?
+              <Skeleton />
+            :
+              <>
+              <Row style={{ marginBottom: 8 }}>
+                <Col span={6}>
+                  <Text>Product Name</Text>
+                </Col>
+                <Col span={6}>
+                  <Text>Qty</Text>
+                </Col>
+                <Col span={6}>
+                  <Text>Price</Text>
+                </Col>
+                <Col span={6}>
+                  <Text>Sub Total</Text>
+                </Col>
+              </Row>
+              <Row>
+                {
+                  getDetailOrder?.data?.map((item,i) =>
+                    <React.Fragment key={i}>
+                      <Col span={6}>
+                        <Text strong>{item.name}</Text>
+                      </Col>
+                      <Col span={6}>
+                        <Text strong>{item.qty}</Text>
+                      </Col>
+                      <Col span={6}>
+                        <Text strong>Rp {item.price.toLocaleString()}</Text>
+                      </Col>
+                      <Col span={6}>
+                        <Text strong>Rp {(item.price*item.qty).toLocaleString()}</Text>
+                      </Col>
+                    </React.Fragment>
+                  )
+                }
+              </Row>
+              </>
+          }
           <Row style={{ marginTop: 32 }}>
             <Col span={24}>
-              <Space style={{ float: 'right' }}>
-                <Button type='danger' ghost>Reject</Button>
-                <Button type="primary" loading={submitLoading}>Accept</Button>
-              </Space>
+              {
+                dataDetail?.status === 'PAID' ?
+                  <Space style={{ float: 'right' }}>
+                    <Button type="primary" loading={submitLoading}>Done</Button>
+                  </Space>
+                :
+                  <Space style={{ float: 'right' }}>
+                    <Button type='danger' ghost>Reject</Button>
+                    <Button onClick={() => this.handleAccept(dataDetail?.id)} type="primary" loading={submitLoading}>Accept</Button>
+                  </Space>
+              }
             </Col>
           </Row>
         </Modal>
@@ -211,18 +248,23 @@ export class Order extends Component {
     )
   }
   componentWillUnmount() {
-    const { unmountListOrder } = this.props
+    const { unmountListOrder, unmountDetailOrder } = this.props
     unmountListOrder()
+    unmountDetailOrder()
   }
 }
 
 const mapStateToProps = (state) => ({
-  getListOrder: state.orderReducer.list
+  getListOrder: state.orderReducer.list,
+  getDetailOrder: state.orderReducer.detail
 })
 
 const mapDispatchToProps = {
   actionListOrder: listOrder,
-  unmountListOrder: unmountListOrder
+  actionDetailOrder: detailOrder,
+  actionUpdateStatusPaid: updateStatusPaid,
+  unmountListOrder: unmountListOrder,
+  unmountDetailOrder: unmountDetailOrder
 
 }
 
