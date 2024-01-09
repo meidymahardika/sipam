@@ -5,7 +5,7 @@ import { Loading } from '../../../components'
 import { Row, Col, Card, Breadcrumb, PageHeader, Table, Modal, Space, Typography, Tag, Divider, Button, Pagination, Skeleton, message } from 'antd'
 import { DollarOutlined } from '@ant-design/icons'
 import { columns } from './columns'
-import { listOrder, detailOrder, updateStatusPaid, unmountListOrder, unmountDetailOrder } from '../../../redux/actions/order/orderAction'
+import { listOrder, detailOrder, updateStatusPaid, updateStatusDone, updateStatusReject, unmountListOrder, unmountDetailOrder } from '../../../redux/actions/order/orderAction'
 
 const { Text } = Typography
 
@@ -48,7 +48,55 @@ export class Order extends Component {
 
     return actionUpdateStatusPaid(id, () => {
       this.setState({ submitLoading: false, visible: false }, () => {
-        message.success(`Successfully changed status`)
+        message.success(`Successfully changed status to paid`)
+        return actionListOrder(meta)
+      })
+    }, (err) => {
+      this.setState({ submitLoading: false }, () => message.error(err))
+    })
+  }
+
+  handleDone = (data) => {
+    const { meta } = this.state
+    const { actionUpdateStatusDone, actionListOrder } = this.props
+
+    const values = {
+      idOrder: data.id,
+      orderNumber: data.order_number,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      paymentMethod: data.payment_method,
+      total: data.total,
+      status: 'DONE'
+    }
+    return actionUpdateStatusDone(values, () => {
+      this.setState({ submitLoading: false, visible: false }, () => {
+        message.success(`Successfully changed status to done`)
+        return actionListOrder(meta)
+      })
+    }, (err) => {
+      this.setState({ submitLoading: false }, () => message.error(err))
+    })
+  }
+
+  handleReject = (data) => {
+    const { meta } = this.state
+    const { actionUpdateStatusReject, actionListOrder } = this.props
+
+    const values = {
+      idOrder: data.id,
+      orderNumber: data.order_number,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      paymentMethod: data.payment_method,
+      total: data.total,
+      status: 'REJECTED'
+    }
+    return actionUpdateStatusReject(values, () => {
+      this.setState({ submitLoading: false, visible: false }, () => {
+        message.success(`Successfully changed status to reject`)
         return actionListOrder(meta)
       })
     }, (err) => {
@@ -232,11 +280,11 @@ export class Order extends Component {
               {
                 dataDetail?.status === 'PAID' ?
                   <Space style={{ float: 'right' }}>
-                    <Button type="primary" loading={submitLoading}>Done</Button>
+                    <Button onClick={() => this.handleDone(dataDetail)} type="primary" loading={submitLoading}>Done</Button>
                   </Space>
                 :
                   <Space style={{ float: 'right' }}>
-                    <Button type='danger' ghost>Reject</Button>
+                    <Button onClick={() => this.handleReject(dataDetail)} type='danger' ghost>Reject</Button>
                     <Button onClick={() => this.handleAccept(dataDetail?.id)} type="primary" loading={submitLoading}>Accept</Button>
                   </Space>
               }
@@ -263,6 +311,8 @@ const mapDispatchToProps = {
   actionListOrder: listOrder,
   actionDetailOrder: detailOrder,
   actionUpdateStatusPaid: updateStatusPaid,
+  actionUpdateStatusDone: updateStatusDone,
+  actionUpdateStatusReject: updateStatusReject,
   unmountListOrder: unmountListOrder,
   unmountDetailOrder: unmountDetailOrder
 

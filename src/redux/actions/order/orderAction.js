@@ -96,3 +96,19 @@ export const updateStatusPaid = (id, successCB, failedCB) => () => {
     return failedCB && failedCB(err)
   })
 }
+
+export const updateStatusDone = (value, successCB, failedCB) => () => {
+  API.POST('/order/update-status-done', value).then((response) => {
+    return successCB && successCB(response)
+  }).catch((err) => {
+    return failedCB && failedCB(err)
+  })
+}
+
+export const updateStatusReject = (value, successCB, failedCB) => () => {
+  API.POST('/order/update-status-reject', value).then((response) => {
+    return successCB && successCB(response)
+  }).catch((err) => {
+    return failedCB && failedCB(err)
+  })
+}
