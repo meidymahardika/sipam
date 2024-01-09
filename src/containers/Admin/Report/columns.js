@@ -1,11 +1,12 @@
 import { Button, Tag } from 'antd'
+import moment from 'moment'
 
 export const columns = (showDetail) => {
   return [
     {
       title: 'Order Number',
       key: 'orderNumber',
-      render: (record) => record.orderNumber,
+      render: (record) => record.order_number,
     },
     {
       title: 'Name',
@@ -15,12 +16,12 @@ export const columns = (showDetail) => {
     {
       title: 'Order Date',
       key: 'date',
-      render: (record) => record.date,
+      render: (record) => moment(record.created_at).format('lll'),
     },
     {
       title: 'Total Price',
       key: 'total',
-      render: (record) => record.total,
+      render: (record) => `Rp ${record.total.toLocaleString()}`,
     },
     {
       title: 'Status',
@@ -41,7 +42,7 @@ export const columns = (showDetail) => {
       title: 'Action',
       key: 'action',
       render: (record) => (
-        <Button type='primary' ghost onClick={showDetail}>
+        <Button type='primary' ghost onClick={() => showDetail(record)}>
           Check Detail
         </Button>
       ),

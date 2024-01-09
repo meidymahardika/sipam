@@ -39,7 +39,7 @@ export class Order extends Component {
   }
 
   hideDetail = () => {
-    this.setState({ visible: false })
+    this.setState({ visible: false, dataDetail: null })
   }
 
   handleAccept = (id) => {
@@ -315,7 +315,6 @@ const mapDispatchToProps = {
   actionUpdateStatusReject: updateStatusReject,
   unmountListOrder: unmountListOrder,
   unmountDetailOrder: unmountDetailOrder
-
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Order)
