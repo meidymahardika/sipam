@@ -21,6 +21,12 @@ export class Checkout extends Component {
     }
   }
 
+  componentDidMount(){
+    if(!localStorage.getItem("totalPrice")){
+      this.props.history.push('/')
+    }
+  }
+
   handleSubmitOrder = (values) => {
     const { actionGetQueue, actionCreate } = this.props;
     actionGetQueue((res) => {
@@ -31,9 +37,16 @@ export class Checkout extends Component {
       values.detail = JSON.parse(localStorage.getItem("data"))
       return actionCreate(values, () => {
         this.setState({ submitLoading: false }, () => {
-          
+          localStorage.setItem("queue", values.queue);
+          localStorage.setItem("name", values.name);
+          localStorage.setItem("phone", values.phone);
+          localStorage.setItem("email", values.email);
+          localStorage.setItem("paymentMethod", values.paymentMethod);
+          localStorage.setItem("detailData", localStorage.getItem("data"));
+          localStorage.setItem("detailTotalPrice", localStorage.getItem("totalPrice"));
+          localStorage.removeItem("data")
+          localStorage.removeItem("totalPrice")
           message.success('Order successfully')
-          this.setState({ visible: false })
           this.props.history.push('/detail-order')
         })
       }, (err) => {

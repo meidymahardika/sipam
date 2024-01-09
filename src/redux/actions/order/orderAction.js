@@ -30,6 +30,23 @@ export const getQueue = (successCB, failedCB) => async (dispatch) => {
     })
 }
 
+export const getNextQueue = (successCB, failedCB) => async (dispatch) => {
+  await dispatch({ type: 'LOAD_QUEUE' })
+  API.GET('/order/next-queue').then((response) => {
+    dispatch({
+      type: 'LOAD_QUEUE_SUCCESS', 
+      payload: { data: response.payload.data }
+    })
+    return successCB && successCB(response.payload.data)
+  }).catch((err) => {
+    failedCB && failedCB()
+    return dispatch(errorHandler(
+      err, 
+      dispatch({ type: 'LOAD_QUEUE_FAILED' }), 
+    ))
+  })
+}
+
 export const listOrder = (meta) => async (dispatch) => {
   await dispatch({ type: 'LOAD_DATA_ORDER' })
   return API.GET('/order/list', meta).then((response) => {
